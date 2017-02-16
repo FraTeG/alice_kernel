@@ -4205,6 +4205,18 @@ static int easy_wakeup_gesture_report_coordinate(struct synaptics_rmi4_data *rmi
 	return retval;
 }
 
+static void meticulus_wake_up() {
+	if(idev) {
+	    input_report_key(idev, KEY_POWER, POWER_KEY_PRESS);
+	    input_sync(idev);
+	    input_report_key(idev, KEY_POWER, POWER_KEY_RELEASE);
+	    input_sync(idev);
+	    TS_LOG_INFO("Meticulus: KEY_POWER reported!\n");
+	} else {
+	    TS_LOG_INFO("Meticulus: power key not registered!\n");
+	}
+}
+
 static int synaptics_rmi4_key_gesture_report(struct synaptics_rmi4_data *rmi4_data,
 		struct ts_fingers *info, struct ts_easy_wakeup_info *gesture_report_info, unsigned char *get_gesture_wakeup_data)
 {
@@ -4217,15 +4229,6 @@ static int synaptics_rmi4_key_gesture_report(struct synaptics_rmi4_data *rmi4_da
 	switch (get_gesture_wakeup_data[0]) {
 	case DOUBLE_CLICK_WAKEUP:
 		if (IS_APP_ENABLE_GESTURE(GESTURE_DOUBLE_CLICK) & gesture_report_info->easy_wakeup_gesture) {
-			if(idev) {
-			    input_report_key(idev, KEY_POWER, POWER_KEY_PRESS);
-			    input_sync(idev);
-			    input_report_key(idev, KEY_POWER, POWER_KEY_RELEASE);
-			    input_sync(idev);
-			    TS_LOG_INFO("Meticulus: KEY_POWER reported!\n");
-			} else {
-			    TS_LOG_INFO("Meticulus: power key not registered!\n");
-			}
 			TS_LOG_INFO("@@@DOUBLE_CLICK_WAKEUP detected!@@@\n");
 			reprot_gesture_key_value = TS_DOUBLE_CLICK;
 			LOG_JANK_D(JLID_TP_GESTURE_KEY, "JL_TP_GESTURE_KEY");
@@ -4325,6 +4328,7 @@ static int synaptics_rmi4_key_gesture_report(struct synaptics_rmi4_data *rmi4_da
 	}
 
 	if(0 != reprot_gesture_key_value) {
+		meticulus_wake_up();
 		wake_lock_timeout(&g_ts_data.ts_wake_lock, 5*HZ);
 		mutex_lock(&wrong_touch_lock);
 		if (true == rmi4_data->synaptics_chip_data->easy_wakeup_info.off_motion_on) {
