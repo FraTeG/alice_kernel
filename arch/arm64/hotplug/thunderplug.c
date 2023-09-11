@@ -47,7 +47,7 @@ static int load_threshold = CPU_LOAD_THRESHOLD;
 
 static int tplug_hp_enabled = 1;
 
-static int touch_boost_enabled = 0;
+static int touch_boost_enabled = 1;
 
 static struct workqueue_struct *tplug_wq;
 static struct delayed_work tplug_work;
