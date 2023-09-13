@@ -536,63 +536,63 @@ static const struct file_operations hi6402_list_fops = {
 /* VOLUME CONTROLS */
 /*
 * MAIN MIC GAIN volume control:
-* from 0 to 36 dB in 2 dB steps
+* from 0 to 36 dB in 4 dB steps
 * MAX VALUE is 18
 */
-static DECLARE_TLV_DB_SCALE(main_mic_tlv, 0, 200, 0);
+static DECLARE_TLV_DB_SCALE(main_mic_tlv, 0, 400, 0);
 
 /*
 * AUX MIC GAIN volume control:
-* from 0 to 36 dB in 2 dB steps
+* from 0 to 36 dB in 4 dB steps
 * MAX VALUE is 18
 */
-static DECLARE_TLV_DB_SCALE(aux_mic_tlv, 0, 200, 0);
+static DECLARE_TLV_DB_SCALE(aux_mic_tlv, 0, 400, 0);
 
 /*
 * LINEINR MIC GAIN volume control:
-* from -20 to 36 dB in 2 dB steps
+* from -20 to 36 dB in 4 dB steps
 * MAX VALUE is 18
 */
-static DECLARE_TLV_DB_SCALE(lineinr_mic_tlv, -2000, 200, 0);
+static DECLARE_TLV_DB_SCALE(lineinr_mic_tlv, -2000, 400, 0);
 
 /*
 * LINEINL MIC GAIN volume control:
-* from -20 to 36 dB in 2 dB steps
+* from -20 to 36 dB in 4 dB steps
 * MAX VALUE is 18
 */
-static DECLARE_TLV_DB_SCALE(lineinl_mic_tlv, -2000, 200, 0);
+static DECLARE_TLV_DB_SCALE(lineinl_mic_tlv, -2000, 400, 0);
 
 /*
 * LOL PGA GAIN volume control:
-* from -21 to 6 dB in 1.5 dB steps
+* from -21 to 6 dB in 4 dB steps
 * MAX VALUE is 18
 */
 static DECLARE_TLV_DB_SCALE(lol_pga_tlv, -2100, 400, 0);
 
 /*
 * LOR PGA GAIN volume control:
-* from -21 to 6 dB in 1.5 dB steps
+* from -21 to 6 dB in 4 dB steps
 * MAX VALUE is 18
 */
 static DECLARE_TLV_DB_SCALE(lor_pga_tlv, -2100, 400, 0);
 
 /*
 * HPL PGA GAIN volume control:
-* from -32 to 6 dB in 1.5 dB steps
+* from -32 to 6 dB in 2 dB steps
 * MAX VALUE is 18
 */
-//static DECLARE_TLV_DB_SCALE(hpl_pga_tlv, -3200, 120, 0);
+//static DECLARE_TLV_DB_SCALE(hpl_pga_tlv, -3200, 200, 0);
 
 /*
 * HPR PGA GAIN volume control:
-* from -32 to 6 dB in 1.5 dB steps
+* from -32 to 6 dB in 2 dB steps
 * MAX VALUE is 18
 */
-//static DECLARE_TLV_DB_SCALE(hpr_pga_tlv, -3200, 120, 0);
+//static DECLARE_TLV_DB_SCALE(hpr_pga_tlv, -3200, 200, 0);
 
 /*
 * EP PGA GAIN volume control:
-* from -21to 6 dB in 1.5 dB steps
+* from -21to 6 dB in 3 dB steps
 * MAX VALUE is 18
 */
 static DECLARE_TLV_DB_SCALE(ep_pga_tlv, -2100, 300, 0);
@@ -1755,9 +1755,9 @@ static const struct snd_kcontrol_new hi6402_snd_controls[] = {
 
 	/* s1 i pga gain kcontrol */
 	SOC_SINGLE("S1 IL PGA GAIN",
-		HI6402_S1_PGA_IL_GAIN_CFG_REG, HI6402_S1_PGA_IL_GAIN_BIT, 255, 0),
+		HI6402_S1_PGA_IL_GAIN_CFG_REG, HI6402_S1_PGA_IL_GAIN_BIT, 265, 0),
 	SOC_SINGLE("S1 IR PGA GAIN",
-		HI6402_S1_PGA_IR_GAIN_CFG_REG, HI6402_S1_PGA_IR_GAIN_BIT, 255, 0),
+		HI6402_S1_PGA_IR_GAIN_CFG_REG, HI6402_S1_PGA_IR_GAIN_BIT, 265, 0),
 	/* s2 i pga gain kcontrol */
 	SOC_SINGLE("S2 IL PGA GAIN",
 		HI6402_S2_PGA_IL_GAIN_CFG_REG, HI6402_S2_PGA_IL_GAIN_BIT, 255, 0),
@@ -3584,8 +3584,6 @@ static int hi6402_audio_hw_params(struct snd_pcm_substream *substream,
 
 	rate = params_rate(params);
 	switch (rate) {
-	case 8000:
-	case 11250:
 	case 16000:
 	case 22500:
 	case 32000:
@@ -3634,29 +3632,6 @@ static int hi6402_voice_hw_params(struct snd_pcm_substream *substream,
 
 	rate = params_rate(params);
 	switch (rate) {
-	case 8000:
-		hi6402_dapm_reg_write_bits(codec, HI6402_S3_FS_CFG_L, 0x00, 0x07);
-		hi6402_dapm_reg_write_bits(codec, HI6402_S3_FS_CFG_H, 0x00, 0x77);
-		hi6402_dapm_reg_clr_bit(codec, HI6402_S3_IN_SRC_SEL, HI6402_S3_IL_SRC_BIT);
-		hi6402_dapm_reg_clr_bit(codec, HI6402_S3_OUT_SRC_SEL, HI6402_S3_OL_SRC_BIT);
-		hi6402_dapm_reg_clr_bit(codec, HI6402_S3_OUT_SRC_SEL, HI6402_S3_OR_SRC_BIT);
-		hi6402_dapm_reg_write_bits(codec, HI6402_S3_SRC_IN_MODE_CGF, 0xAA, 0xEE);
-		hi6402_dapm_reg_write_bits(codec, HI6402_S3_SRC_OUT_MODE_CGF, 0x24, 0x36);
-		hi6402_dapm_reg_set_bit(codec, HI6402_S3_IN_SRC_SEL, HI6402_S3_IL_SRC_BIT);
-		hi6402_dapm_reg_set_bit(codec, HI6402_S3_OUT_SRC_SEL, HI6402_S3_OL_SRC_BIT);
-		hi6402_dapm_reg_set_bit(codec, HI6402_S3_OUT_SRC_SEL, HI6402_S3_OR_SRC_BIT);
-		if (3 == priv->mic_num || 4 == priv->mic_num) {
-			hi6402_dapm_reg_clr_bit(codec, HI6402_S1_OUT_SRC_SEL, HI6402_S1_OL_SRC_BIT);
-			hi6402_dapm_reg_clr_bit(codec, HI6402_S1_OUT_SRC_SEL, HI6402_S1_OR_SRC_BIT);
-			hi6402_dapm_reg_write_bits(codec, HI6402_S1_FS_CFG_L, 0x00, 0x07);
-			hi6402_dapm_reg_write_bits(codec, HI6402_S1_FS_CFG_H, 0x00, 0x70);
-			hi6402_dapm_reg_write_bits(codec, HI6402_S1_SRC_OUT_MODE_CGF, 0x24, 0x36);
-			hi6402_dapm_reg_set_bit(codec, HI6402_S1_OUT_SRC_SEL, HI6402_S1_OL_SRC_BIT);
-			hi6402_dapm_reg_set_bit(codec, HI6402_S1_OUT_SRC_SEL, HI6402_S1_OR_SRC_BIT);
-		} else {
-
-		}
-		break;
 	case 16000:
 		hi6402_dapm_reg_write_bits(codec, HI6402_S3_FS_CFG_L, 0x01, 0x07);
 		hi6402_dapm_reg_write_bits(codec, HI6402_S3_FS_CFG_H, 0x11, 0x77);
