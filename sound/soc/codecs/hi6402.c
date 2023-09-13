@@ -567,35 +567,35 @@ static DECLARE_TLV_DB_SCALE(lineinl_mic_tlv, -2000, 200, 0);
 * from -21 to 6 dB in 1.5 dB steps
 * MAX VALUE is 18
 */
-static DECLARE_TLV_DB_SCALE(lol_pga_tlv, -2100, 150, 0);
+static DECLARE_TLV_DB_SCALE(lol_pga_tlv, -2100, 400, 0);
 
 /*
 * LOR PGA GAIN volume control:
 * from -21 to 6 dB in 1.5 dB steps
 * MAX VALUE is 18
 */
-static DECLARE_TLV_DB_SCALE(lor_pga_tlv, -2100, 150, 0);
+static DECLARE_TLV_DB_SCALE(lor_pga_tlv, -2100, 400, 0);
 
 /*
 * HPL PGA GAIN volume control:
 * from -32 to 6 dB in 1.5 dB steps
 * MAX VALUE is 18
 */
-//static DECLARE_TLV_DB_SCALE(hpl_pga_tlv, -3200, 100, 0);
+//static DECLARE_TLV_DB_SCALE(hpl_pga_tlv, -3200, 120, 0);
 
 /*
 * HPR PGA GAIN volume control:
 * from -32 to 6 dB in 1.5 dB steps
 * MAX VALUE is 18
 */
-//static DECLARE_TLV_DB_SCALE(hpr_pga_tlv, -3200, 100, 0);
+//static DECLARE_TLV_DB_SCALE(hpr_pga_tlv, -3200, 120, 0);
 
 /*
 * EP PGA GAIN volume control:
 * from -21to 6 dB in 1.5 dB steps
 * MAX VALUE is 18
 */
-static DECLARE_TLV_DB_SCALE(ep_pga_tlv, -2100, 150, 0);
+static DECLARE_TLV_DB_SCALE(ep_pga_tlv, -2100, 300, 0);
 
 static void hi6402_audio_rx_clk_enable(struct snd_soc_codec *codec, bool enable)
 {
@@ -1819,7 +1819,7 @@ static const struct snd_kcontrol_new hi6402_snd_controls[] = {
 
 	/* lol pga gain kcontrol */
 	SOC_SINGLE_TLV("LOL PGA GAIN",
-		HI6402_LOL_PGA_CFG_REG, HI6402_LOL_PGA_GAIN_BIT, 18, 0, lol_pga_tlv),
+		HI6402_LOL_PGA_CFG_REG, HI6402_LOL_PGA_GAIN_BIT, 25, 0, lol_pga_tlv),
 	SOC_SINGLE("LOL PGA MUTE",
 		HI6402_LOL_PGA_CFG_REG, HI6402_LOL_PGA_MUTE_BIT, 1, 1),
 
@@ -1831,19 +1831,19 @@ static const struct snd_kcontrol_new hi6402_snd_controls[] = {
 
 	/* hpl pga gain kcontrol */
 	SOC_SINGLE("HPL PGA GAIN",
-		HI6402_HPL_PGA_CFG_REG, HI6402_HPL_PGA_GAIN_BIT, 33, 0),
+		HI6402_HPL_PGA_CFG_REG, HI6402_HPL_PGA_GAIN_BIT, 70, 0),
 	SOC_SINGLE("HPL PGA MUTE",
 		HI6402_HPL_PGA_CFG_REG, HI6402_HPL_PGA_MUTE_BIT, 1, 1),
 
 	/* hpr pga gain kcontrol */
 	SOC_SINGLE("HPR PGA GAIN",
-		HI6402_HPR_PGA_CFG_REG, HI6402_HPR_PGA_GAIN_BIT, 33, 0),
+		HI6402_HPR_PGA_CFG_REG, HI6402_HPR_PGA_GAIN_BIT, 70, 0),
 	SOC_SINGLE("HPR PGA MUTE",
 		HI6402_HPR_PGA_CFG_REG, HI6402_HPR_PGA_MUTE_BIT, 1, 1),
 
 	/* ep pga gain kcontrol */
 	SOC_SINGLE_TLV("EP PGA GAIN",
-		HI6402_EP_PGA_CFG_REG, HI6402_EP_PGA_GAIN_BIT, 18, 0, ep_pga_tlv),
+		HI6402_EP_PGA_CFG_REG, HI6402_EP_PGA_GAIN_BIT, 60, 0, ep_pga_tlv),
 	SOC_SINGLE("EP PGA MUTE",
 		HI6402_EP_PGA_CFG_REG, HI6402_EP_PGA_MUTE_BIT, 1, 1),
 
